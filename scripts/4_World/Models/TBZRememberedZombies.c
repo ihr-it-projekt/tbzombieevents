@@ -34,7 +34,7 @@ class TBZRememberedZombies {
     }
 
     bool MustRelocated(vector eventPosition, int radiusEventPosition) {
-        if (!object.IsAlive()) {
+        if (!object || !object.IsAlive()) {
             return false;
         }
 

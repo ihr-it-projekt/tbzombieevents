@@ -3,14 +3,14 @@ modded class PlayerBase
     private ref TBZMessageMenu messageMenu;
 
     void TBZDisplayMessage(string message) {
-        GetMessageMenu();
+        TBZGetMessageMenu();
         messageMenu.SetText(message);
         SEffectManager.CreateSound("TBZ_Message_SoundSet", GetPosition()).SoundPlay();
         messageMenu.Init();
         messageMenu.Show();
     }
 
-	TBZMessageMenu GetMessageMenu() {
+	TBZMessageMenu TBZGetMessageMenu() {
 		messageMenu = new TBZMessageMenu();
 		return messageMenu;
 	}
