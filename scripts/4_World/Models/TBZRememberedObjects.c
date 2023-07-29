@@ -8,7 +8,7 @@ class TBZRememberedObjects {
     }
 
     void ClearObject() {
-        if (object.GetPosition() == initialPosition) {
+        if (object && object.GetPosition() == initialPosition) {
             object.Delete();
         }
     }

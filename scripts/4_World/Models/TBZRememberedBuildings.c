@@ -7,6 +7,8 @@ class TBZRememberedBuildings {
     }
 
     void ClearObject() {
-        object.Delete();
+        if (object) {
+            object.Delete();
+        }
     }
 };
