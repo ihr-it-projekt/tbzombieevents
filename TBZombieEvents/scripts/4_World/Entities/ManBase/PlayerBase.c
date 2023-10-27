@@ -1,18 +1,18 @@
 modded class PlayerBase
 {
-    private ref TBZMessageMenu messageMenu;
+    private ref TBZMessageMenu tbz_messageMenu;
 
     void TBZDisplayMessage(string message) {
         TBZGetMessageMenu();
-        messageMenu.SetText(message);
+        tbz_messageMenu.SetText(message);
         SEffectManager.CreateSound("TBZ_Message_SoundSet", GetPosition()).SoundPlay();
-        messageMenu.Init();
-        messageMenu.Show();
+        tbz_messageMenu.Init();
+        tbz_messageMenu.Show();
     }
 
 	TBZMessageMenu TBZGetMessageMenu() {
-		messageMenu = new TBZMessageMenu();
-		return messageMenu;
+		tbz_messageMenu = new TBZMessageMenu();
+		return tbz_messageMenu;
 	}
 
 	override bool CanBeTargetedByAI(EntityAI ai)

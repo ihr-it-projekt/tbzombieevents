@@ -1,11 +1,11 @@
 modded class MissionGameplay
 {
-	private ref TBZPlayerEventListener playerEventListener;
+	private ref TBZPlayerEventListener tbz_playerEventListener;
    	PlayerBase tbmPlayerBase;
 
 	override void OnInit() {
 		super.OnInit();
-		playerEventListener = new TBZPlayerEventListener;
+		tbz_playerEventListener = new TBZPlayerEventListener;
 	}
 
  }
