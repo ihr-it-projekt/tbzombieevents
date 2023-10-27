@@ -1,6 +1,6 @@
 class TBZMessageMenu
 {
-	private ref TBMUIItemCreator creator;
+	private ref TBZUIItemCreator creator;
 	private MultilineTextWidget message;
 	private ref Timer timer;
 	private string messageText;
@@ -13,7 +13,7 @@ class TBZMessageMenu
 
 
     void Init() {
-        creator = new TBMUIItemCreator("TBZombieEvents/layout/TBZ_Message.layout");
+        creator = new TBZUIItemCreator("TBZombieEvents/layout/TBZ_Message.layout");
         message = creator.GetMultilineTextWidget("Announcements");
         layoutRoot = creator.GetLayoutRoot();
 

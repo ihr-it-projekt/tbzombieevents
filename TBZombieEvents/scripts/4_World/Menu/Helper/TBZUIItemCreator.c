@@ -1,9 +1,9 @@
-class TBMUIItemCreator
+class TBZUIItemCreator
 {
 
 	Widget layoutRoot;
 	
-    void TBMUIItemCreator(string layoutRootPath) {
+    void TBZUIItemCreator(string layoutRootPath) {
 		this.layoutRoot = GetGame().GetWorkspace().CreateWidgets(layoutRootPath);
 	}
 
