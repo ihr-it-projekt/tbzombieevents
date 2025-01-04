@@ -1,5 +1,4 @@
-modded class PlayerBase
-{
+modded class PlayerBase {
     private ref TBZMessageMenu tbz_messageMenu;
 
     void TBZDisplayMessage(string message) {
@@ -10,16 +9,15 @@ modded class PlayerBase
         tbz_messageMenu.Show();
     }
 
-	TBZMessageMenu TBZGetMessageMenu() {
-		tbz_messageMenu = new TBZMessageMenu();
-		return tbz_messageMenu;
-	}
+    TBZMessageMenu TBZGetMessageMenu() {
+        tbz_messageMenu = new TBZMessageMenu();
+        return tbz_messageMenu;
+    }
 
-	override bool CanBeTargetedByAI(EntityAI ai)
-    {
-        if (GetGame().IsServer()) {
-			ZombieBase zoombi = ZombieBase.Cast(ai);
-            if (zoombi && false == zoombi.CanAttackPlayer(GetPosition())) {
+    override bool CanBeTargetedByAI(EntityAI ai) {
+        if(GetGame().IsServer()) {
+            ZombieBase zoombi = ZombieBase.Cast(ai);
+            if(zoombi && false == zoombi.CanAttackPlayer(GetPosition())) {
                 return false;
             }
         }

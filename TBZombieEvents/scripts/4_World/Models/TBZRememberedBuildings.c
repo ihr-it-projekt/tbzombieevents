@@ -1,14 +1,14 @@
 class TBZRememberedBuildings {
-    private Building object;
+    private Object object;
     private vector initialPosition;
 
-    void TBZRememberedBuildings(Building rm_object) {
+    void TBZRememberedBuildings(Object rm_object) {
         object = rm_object;
     }
 
     void ClearObject() {
-        if (object) {
-            object.Delete();
+        if(object) {
+            g_Game.ObjectDelete(object);
         }
     }
 };

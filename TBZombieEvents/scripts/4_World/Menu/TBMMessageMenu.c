@@ -1,14 +1,13 @@
-class TBZMessageMenu
-{
-	private ref TBZUIItemCreator creator;
-	private MultilineTextWidget message;
-	private ref Timer timer;
-	private string messageText;
-	private Widget layoutRoot;
+class TBZMessageMenu {
+    private ref TBZUIItemCreator creator;
+    private MultilineTextWidget message;
+    private ref Timer timer;
+    private string messageText;
+    private Widget layoutRoot;
 
 
     void ~TBZMessageMenu() {
-        if (layoutRoot) layoutRoot.Show(false);
+        if(layoutRoot) layoutRoot.Show(false);
     }
 
 

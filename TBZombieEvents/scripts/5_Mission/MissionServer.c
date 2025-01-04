@@ -1,10 +1,9 @@
 modded class MissionServer {
 
     private ref TBZEventService eventService;
-	
-	void MissionServer()
-	{
+
+    void MissionServer() {
         eventService = new TBZEventService;
-	}
+    }
 
 };

@@ -1,5 +1,4 @@
-class TBZNeededItem
-{
+class TBZNeededItem {
     string name;
     string position;
     float healthDecrease = 5.0;

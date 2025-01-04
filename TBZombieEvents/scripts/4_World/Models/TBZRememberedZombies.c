@@ -7,26 +7,24 @@ class TBZRememberedZombies {
 
     void TBZRememberedZombies(DayZCreatureAI rm_object) {
         object = rm_object;
-		zoombie = ZombieBase.Cast(rm_object);
-		
+        zoombie = ZombieBase.Cast(rm_object);
+
         isReplaced = false;
         tick = 0;
         tickNoAttack = 0;
     }
 
     void ClearObject() {
-        if (object) {
-            object.Delete();
-        }
+        if(object) g_Game.ObjectDelete(object);
     }
 
     bool CanReSpawn(int tickForRespawn) {
-        if ((object && object.IsAlive()) || isReplaced) {
+        if((object && object.IsAlive()) || isReplaced) {
             return false;
         }
         ++tick;
 
-        if (tick >= tickForRespawn) {
+        if(tick >= tickForRespawn) {
             return true;
         }
 
@@ -34,7 +32,7 @@ class TBZRememberedZombies {
     }
 
     bool MustRelocated(vector eventPosition, int radiusEventPosition) {
-        if (!object || !object.IsAlive()) {
+        if(!object || !object.IsAlive()) {
             return false;
         }
 
@@ -48,7 +46,7 @@ class TBZRememberedZombies {
     }
 
 
-    void isReplaced(){
+    void isReplaced() {
         isReplaced = true;
     }
 };

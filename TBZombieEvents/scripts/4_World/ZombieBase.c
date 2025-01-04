@@ -1,14 +1,13 @@
-modded class ZombieBase
-{
+modded class ZombieBase {
     vector attackPosition;
     int maxRadius;
 
     bool CanAttackPlayer(vector playerPos) {
-        if (!attackPosition || !maxRadius) {
+        if(!attackPosition || !maxRadius) {
             return true;
         }
 
-        if (!IsAlive()) {
+        if(!IsAlive()) {
             return false;
         }
 

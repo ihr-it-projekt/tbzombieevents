@@ -1,22 +1,18 @@
-class TBZEventService :Managed {
+class TBZEventService : Managed {
     private ref TBZombieEventConfig config;
-    private ref Timer gameTimer;
-    private ref array<ref TBZEventLocation> locations;
+    private ref Timer gameTimer = new Timer;
+    private ref array<ref TBZEventLocation> locations = new array<ref TBZEventLocation>;
     private int oldLocationIndex;
-    private ref TBZLocationBuilder locationBuilder;
+    private ref TBZLocationBuilder locationBuilder = new TBZLocationBuilder;
 
-    void TBZEventService()
-    {
+    void TBZEventService() {
         config = new TBZombieEventConfig;
-        locations = new array<ref TBZEventLocation>;
         SetEventLocations(config.locations);
-        gameTimer = new Timer;
         gameTimer.Run(60, this, "StartEvent");
-        locationBuilder = new TBZLocationBuilder;
     }
 
     void ~TBZEventService() {
-        if (gameTimer) {
+        if(gameTimer) {
             gameTimer.Stop();
         }
     }
@@ -26,41 +22,41 @@ class TBZEventService :Managed {
         array<Man> players = new array<Man>;
         GetGame().GetPlayers(players);
 
-        if (config.playerControlled && config.minCountPlayer > 0) {
-            if (players.Count() < config.minCountPlayer) {
+        if(config.playerControlled && config.minCountPlayer > 0) {
+            if(players.Count() < config.minCountPlayer) {
                 canStart = false;
             }
         }
 
-        if (config.timeControlled) {
+        if(config.timeControlled) {
             int hour;
             int minute;
             int second;
 
             GetHourMinuteSecond(hour, minute, second);
 
-            if (hour < config.startTimeHour || hour > config.endTimeHour) {
+            if(hour < config.startTimeHour || hour > config.endTimeHour) {
                 canStart = false;
-            } else if ((hour == config.endTimeHour && minute > config.endTimeMinute) || (hour == config.startTimeHour && minute < config.startTimeMinute)) {
+            } else if((hour == config.endTimeHour && minute > config.endTimeMinute) || (hour == config.startTimeHour && minute < config.startTimeMinute)) {
                 canStart = false;
             }
         }
 
-        if (locations.Count() == 0) {
+        if(locations.Count() == 0) {
             canStart = false;
         } else {
             foreach(TBZEventLocation location: locations) {
-                if (location.IsActive()) {
+                if(location.IsActive()) {
                     canStart = false;
                     break;
                 }
             }
         }
 
-        if (canStart) {
+        if(canStart) {
             int newLocationIndex = locations.GetRandomIndex();
 
-            while (newLocationIndex == oldLocationIndex && locations.Count() > 1) {
+            while(newLocationIndex == oldLocationIndex && locations.Count() > 1) {
                 newLocationIndex = locations.GetRandomIndex();
             }
 
@@ -75,23 +71,22 @@ class TBZEventService :Managed {
             int randTimer = Math.RandomIntInclusive(config.minMinutesBetweenEvents, config.maxMinutesBetweenEvents);
             gameTimer.Run((currentLocation.durationInMinutes + randTimer) * 60, this, "StartEvent");
 
-            for ( int i = 0; i < players.Count(); i++ )
-            {
+            for(int i = 0; i < players.Count(); i++) {
                 PlayerBase player;
                 Class.CastTo(player, players.Get(i));
 
                 string message = "#new_event_start " + currentLocation.name;
 
-				if (currentLocation.playerNeedsItemsToEnter && currentLocation.neededItemsToEnter.Count()) {
-					string neededItems = "";
-					foreach (TBZNeededItem itemNeeded: currentLocation.neededItemsToEnter) {
-						neededItems = neededItems + GetItemDisplayName(itemNeeded.name)  + ";" ;
-					}
-					
-                	message = message + " #need_item " + neededItems;
-				}
+                if(currentLocation.playerNeedsItemsToEnter && currentLocation.neededItemsToEnter.Count()) {
+                    string neededItems = "";
+                    foreach(TBZNeededItem itemNeeded: currentLocation.neededItemsToEnter) {
+                        neededItems = neededItems + GetItemDisplayName(itemNeeded.name) + ";" ;
+                    }
 
-				 SendMessageToPlayerZombieEvent(message, player);
+                    message = message + " #need_item " + neededItems;
+                }
+
+                SendMessageToPlayerZombieEvent(message, player);
             }
         } else {
             gameTimer.Stop();
@@ -102,7 +97,7 @@ class TBZEventService :Managed {
     private void SetEventLocations(array<ref TBZEventLocationConfig> locationsConfigs) {
         foreach(TBZEventLocationConfig locationConfig: locationsConfigs) {
             TBZEventLocation location = new TBZEventLocation(locationConfig);
-			locations.Insert(location);
+            locations.Insert(location);
         }
     }
 

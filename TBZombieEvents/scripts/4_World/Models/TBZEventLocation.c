@@ -1,6 +1,6 @@
 class TBZEventLocation {
 
-	string name;
+    string name;
     vector position;
     float radiusOfSpawn;
     int countOfMaxZombies;
@@ -29,51 +29,51 @@ class TBZEventLocation {
     private ref Timer playerCheckTimer;
 
     void ~TBZEventLocation() {
-        if (gameTimer) {
+        if(gameTimer) {
             gameTimer.Stop();
         }
-        if (zombieTimer) {
+        if(zombieTimer) {
             zombieTimer.Stop();
         }
-        if (zombieAttackTimer) {
+        if(zombieAttackTimer) {
             zombieAttackTimer.Stop();
         }
-        if (playerCheckTimer) {
+        if(playerCheckTimer) {
             playerCheckTimer.Stop();
         }
-		SetInactive();
+        SetInactive();
     }
 
     void TBZEventLocation(TBZEventLocationConfig config) {
-         name = config.name;
-         position = config.position;
-         radiusOfSpawn = config.radiusOfSpawn;
-         countOfMaxZombies = config.countOfMaxZombies;
-         countOfMinZombies = config.countOfMinZombies;
-         countOfMaxItems = config.countOfMaxItems;
-         countOfMinItems = config.countOfMinItems;
-         zombieTypes = config.zombieTypes;
-         itemTypes = config.itemTypes;
-         neededItemsToEnter = config.neededItemsToEnter;
-         playerNeedsItemsToEnter = config.playerNeedsItemsToEnter;
-         zombieReSpawn = config.zombieReSpawn;
-         zombieReSpawnTick = config.zombieReSpawnTick;
-         durationInMinutes = config.durationInMinutes;
-         randomItemHealths = config.randomItemHealths;
-         randomItemHealthsMax = config.randomItemHealthsMax;
-         randomItemHealthsMin = config.randomItemHealthsMin;
-         eventObjects = config.eventObjects;
+        name = config.name;
+        position = config.position;
+        radiusOfSpawn = config.radiusOfSpawn;
+        countOfMaxZombies = config.countOfMaxZombies;
+        countOfMinZombies = config.countOfMinZombies;
+        countOfMaxItems = config.countOfMaxItems;
+        countOfMinItems = config.countOfMinItems;
+        zombieTypes = config.zombieTypes;
+        itemTypes = config.itemTypes;
+        neededItemsToEnter = config.neededItemsToEnter;
+        playerNeedsItemsToEnter = config.playerNeedsItemsToEnter;
+        zombieReSpawn = config.zombieReSpawn;
+        zombieReSpawnTick = config.zombieReSpawnTick;
+        durationInMinutes = config.durationInMinutes;
+        randomItemHealths = config.randomItemHealths;
+        randomItemHealthsMax = config.randomItemHealthsMax;
+        randomItemHealthsMin = config.randomItemHealthsMin;
+        eventObjects = config.eventObjects;
 
-         creaturesCollection = new array<ref TBZRememberedZombies>;
-         itemCollection = new array<ref TBZRememberedObjects>;
-		 buildingCollection = new array<ref TBZRememberedBuildings>;
-         isActive = false;
+        creaturesCollection = new array<ref TBZRememberedZombies>;
+        itemCollection = new array<ref TBZRememberedObjects>;
+        buildingCollection = new array<ref TBZRememberedBuildings>;
+        isActive = false;
     }
 
     void AddCreature(DayZCreatureAI creature) {
-        if (creature) {
+        if(creature) {
             ZombieBase zombie = ZombieBase.Cast(creature);
-            if (zombie) {
+            if(zombie) {
                 zombie.maxRadius = radiusOfSpawn;
                 zombie.attackPosition = position;
             }
@@ -83,18 +83,18 @@ class TBZEventLocation {
     }
 
     void AddItem(ItemBase item) {
-        if (!item) {
+        if(!item) {
             return;
         }
 
-		if (randomItemHealths) {
-			item.SetHealth(Math.RandomIntInclusive(randomItemHealthsMin, randomItemHealthsMax));
-		}
+        if(randomItemHealths) {
+            item.SetHealth(Math.RandomIntInclusive(randomItemHealthsMin, randomItemHealthsMax));
+        }
 
         itemCollection.Insert(new TBZRememberedObjects(item));
     }
 
-    void AddBuilding(Building house) {
+    void AddBuilding(Object house) {
         buildingCollection.Insert(new TBZRememberedBuildings(house));
     }
 
@@ -102,77 +102,77 @@ class TBZEventLocation {
         isActive = true;
 
         gameTimer = new Timer();
-		gameTimer.Run(durationInMinutes * 60, this, "SetInactive");
+        gameTimer.Run(durationInMinutes * 60, this, "SetInactive");
         zombieTimer = new Timer();
         zombieTimer.Run(1, this, "CheckZombies", null, true);
         zombieAttackTimer = new Timer();
         zombieAttackTimer.Run(1, this, "CheckZombieAttacks", null, true);
-		if (playerNeedsItemsToEnter && neededItemsToEnter.Count() > 0) {
-			playerCheckTimer = new Timer();
-        	playerCheckTimer.Run(10, this, "CheckPlayers", null, true);
-		}
+        if(playerNeedsItemsToEnter && neededItemsToEnter.Count() > 0) {
+            playerCheckTimer = new Timer();
+            playerCheckTimer.Run(10, this, "CheckPlayers", null, true);
+        }
     }
 
     void CheckZombies() {
         foreach(TBZRememberedZombies rm_creature: creaturesCollection) {
             if(zombieReSpawn && rm_creature.CanReSpawn(zombieReSpawnTick)) {
                 DayZCreatureAI creature = TBZCreator.SpawnCreature(GetRandomSpawnPosition(), zombieTypes.GetRandomElement());
-                if (creature != null) {
+                if(creature != null) {
                     AddCreature(creature);
                     rm_creature.isReplaced();
                 }
             }
 
-            if (rm_creature.MustRelocated(position, radiusOfSpawn)) {
+            if(rm_creature.MustRelocated(position, radiusOfSpawn)) {
                 rm_creature.Relocate(GetRandomSpawnPosition());
             }
         }
     }
 
-	void CheckPlayers() {
-		array<Man> players = new array<Man>;
+    void CheckPlayers() {
+        array<Man> players = new array<Man>;
         GetGame().GetPlayers(players);
-		for (int i = 0; i < players.Count(); i++ ) {
+        for(int i = 0; i < players.Count(); i++) {
             DayZPlayer player;
             Class.CastTo(player, players.Get(i));
-			
-			float distance = vector.Distance(position, player.GetPosition());
-			if (distance <= radiusOfSpawn) {
-        		ItemBase item;
-				float decreaseFactor = 0;
-				string missingItems = "";
-				foreach (TBZNeededItem itemNeeded: neededItemsToEnter) {
-                	EntityAI inventoryItem = player.FindAttachmentBySlotName(itemNeeded.position);
 
-					if (!inventoryItem || inventoryItem.IsRuined() || !inventoryItem.IsKindOf(itemNeeded.name)) {
-						decreaseFactor += itemNeeded.healthDecrease;
-						missingItems = missingItems + itemNeeded.position + ": "+  GetItemDisplayName(itemNeeded.name) + ";";
-					}
-				}
+            float distance = vector.Distance(position, player.GetPosition());
+            if(distance <= radiusOfSpawn) {
+                ItemBase item;
+                float decreaseFactor = 0;
+                string missingItems = "";
+                foreach(TBZNeededItem itemNeeded: neededItemsToEnter) {
+                    EntityAI inventoryItem = player.FindAttachmentBySlotName(itemNeeded.position);
 
-				if (decreaseFactor != 0) {
+                    if(!inventoryItem || inventoryItem.IsRuined() || !inventoryItem.IsKindOf(itemNeeded.name)) {
+                        decreaseFactor += itemNeeded.healthDecrease;
+                        missingItems = missingItems + itemNeeded.position + ": " + GetItemDisplayName(itemNeeded.name) + ";";
+                    }
+                }
+
+                if(decreaseFactor != 0) {
                     SendMessageToPlayerZombieEvent("#has_not_items " + missingItems, player);
 
                     player.DecreaseHealth(decreaseFactor);
-				}
-			}
-		}
-	}
+                }
+            }
+        }
+    }
 
     void SetInactive() {
-        if (false == isActive) {
+        if(false == isActive) {
             return;
         }
 
-        if (gameTimer) {
+        if(gameTimer) {
             gameTimer.Stop();
         }
 
-        if (zombieTimer) {
+        if(zombieTimer) {
             zombieTimer.Stop();
         }
 
-        if (playerCheckTimer) {
+        if(playerCheckTimer) {
             playerCheckTimer.Stop();
         }
 
@@ -196,7 +196,7 @@ class TBZEventLocation {
 
         array<Man> players = new array<Man>;
         GetGame().GetPlayers(players);
-        for ( int i = 0; i < players.Count(); i++ ) {
+        for(int i = 0; i < players.Count(); i++) {
             PlayerBase player;
             Class.CastTo(player, players.Get(i));
 
@@ -209,13 +209,13 @@ class TBZEventLocation {
     }
 
     vector GetRandomSpawnPosition() {
-		vector random;
-		
-		random[0] = position[0] + Math.RandomFloatInclusive(radiusOfSpawn * -1, radiusOfSpawn);
-		random[2] = position[2] + Math.RandomFloatInclusive(radiusOfSpawn * -1, radiusOfSpawn);
-		random[1] = position[1];
-		
-		return random;
+        vector random;
+
+        random[0] = position[0] + Math.RandomFloatInclusive(radiusOfSpawn * -1, radiusOfSpawn);
+        random[2] = position[2] + Math.RandomFloatInclusive(radiusOfSpawn * -1, radiusOfSpawn);
+        random[1] = position[1];
+
+        return random;
     }
 
 };

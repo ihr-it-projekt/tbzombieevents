@@ -8,8 +8,6 @@ class TBZRememberedObjects {
     }
 
     void ClearObject() {
-        if (object && object.GetPosition() == initialPosition) {
-            object.Delete();
-        }
+        if(object && object.GetPosition() == initialPosition) g_Game.ObjectDelete(object);
     }
 };

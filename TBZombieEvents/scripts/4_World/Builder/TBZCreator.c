@@ -2,16 +2,16 @@ class TBZCreator {
     static DayZCreatureAI SpawnCreature(vector pos, string gameObjectName) {
         pos[1] = GetGame().SurfaceY(pos[0], pos[2]);
         DayZCreatureAI game_obj = DayZCreatureAI.Cast(GetGame().CreateObject(gameObjectName, pos, false, true));
-        if (!game_obj) {
+        if(!game_obj) {
             return game_obj;
         }
-        game_obj.SetPosition( pos );
+        game_obj.SetPosition(pos);
         game_obj.SetOrientation("0 0 0");
         game_obj.SetOrientation(game_obj.GetOrientation()); //Collision fix
         game_obj.Update();
-        game_obj.SetAffectPathgraph( true, false );
-        if( game_obj.CanAffectPathgraph() ) {
-            GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater( GetGame().UpdatePathgraphRegionByObject, 100, false, game_obj );
+        game_obj.SetAffectPathgraph(true, false);
+        if(game_obj.CanAffectPathgraph()) {
+            GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(GetGame().UpdatePathgraphRegionByObject, 100, false, game_obj);
         }
 
         return game_obj;
@@ -20,15 +20,15 @@ class TBZCreator {
     static ItemBase SpawnItem(vector pos, TBZItem item) {
         pos[1] = GetGame().SurfaceY(pos[0], pos[2]);
         ItemBase game_obj = ItemBase.Cast(GetGame().CreateObject(item.type, pos));
-        if (!game_obj) {
+        if(!game_obj) {
             return game_obj;
         }
         game_obj.SetOrientation("0 0 0");
         game_obj.SetOrientation(game_obj.GetOrientation()); //Collision fix
         game_obj.Update();
-        game_obj.SetAffectPathgraph( true, false );
-        if( game_obj.CanAffectPathgraph() ) {
-            GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater( GetGame().UpdatePathgraphRegionByObject, 100, false, game_obj );
+        game_obj.SetAffectPathgraph(true, false);
+        if(game_obj.CanAffectPathgraph()) {
+            GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(GetGame().UpdatePathgraphRegionByObject, 100, false, game_obj);
         }
 
         TBZCreator.AddAttachments(item, game_obj);
@@ -37,16 +37,16 @@ class TBZCreator {
     }
 
     private static void AddAttachments(TBZItem type, EntityAI item) {
-        if (!item) return;
-        if (!type.attachments) return;
+        if(!item) return;
+        if(!type.attachments) return;
 
         foreach(TBZItem attachment: type.attachments) {
-            if (item.GetInventory()) {
+            if(item.GetInventory()) {
                 EntityAI itemAttachment = item.GetInventory().CreateInInventory(attachment.type);
 
-                if (!itemAttachment) {
+                if(!itemAttachment) {
                     itemAttachment = item.GetInventory().CreateEntityInCargo(attachment.type);
-                    if (!itemAttachment) {
+                    if(!itemAttachment) {
                         itemAttachment = item.GetInventory().CreateAttachment(attachment.type);
                     }
                 }
@@ -58,9 +58,9 @@ class TBZCreator {
         }
     }
 
-    static House SpawnHouse(vector position, vector orientation, string gameObjectName) {
-        House house = House.Cast(GetGame().CreateObject(gameObjectName, position));
-        if (!house) {
+    static Object Spawn(vector position, vector orientation, string gameObjectName) {
+        Object house = GetGame().CreateObject(gameObjectName, position);
+        if(!house) {
             return house;
         }
         house.SetPosition(position);
@@ -69,7 +69,7 @@ class TBZCreator {
         house.Update();
         house.SetAffectPathgraph(true, false);
         if(house.CanAffectPathgraph()) {
-            GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater( GetGame().UpdatePathgraphRegionByObject, 100, false, house );
+            GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(GetGame().UpdatePathgraphRegionByObject, 100, false, house);
         }
 
         return house;
